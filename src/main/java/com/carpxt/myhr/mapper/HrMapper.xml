@@ -154,4 +154,8 @@
   <select id="loadUserByUsername" resultMap="BaseResultMap">
     SELECT * FROM hr WHERE username=#{username}
   </select>
+    <select id="getRolesByid" resultType="com.carpxt.myhr.model.Role">
+        SELECT r.* FROM  role r ,hr_role rr  WHERE  rr.`rid`=r.`id` AND rr.`hrid`=#{id}
+
+    </select>
 </mapper>

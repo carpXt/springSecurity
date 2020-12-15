@@ -32,11 +32,10 @@
     </collection>
   </resultMap>
   <resultMap id="MenuRoles" type="com.carpxt.myhr.model.Menu" extends="BaseResultMap">
-    <id column="rid" property="id" jdbcType="INTEGER" />
-    <collection property="children" ofType="com.carpxt.myhr.model.Role">
-    <result column="url2" property="id" jdbcType="VARCHAR" />
-    <result column="rname" property="name" jdbcType="VARCHAR" />
-    <result column="rnamezh" property="namezh" jdbcType="VARCHAR" />
+    <collection property="roleList" ofType="com.carpxt.myhr.model.Role">
+    <id column="rid" property="id"/>
+    <result column="rname" property="name"/>
+    <result column="rnameZh" property="nameZh"/>
     </collection>
   </resultMap>
 
@@ -64,7 +63,7 @@
 
 
   <select id="getAllMenusWithRole" resultMap="MenuRoles">
-        SELECT m.*,hr.`name` AS rname,hr.`id`AS rid,hr.`nameZh`AS rnameZh
+        SELECT m.*,hr.`name` AS rname,hr.`id`AS rid,hr.`namezh`AS rnameZh
         FROM menu m,menu_role mr,role hr WHERE m.`id`=mr.`mid` AND hr.`id`=mr.rid ORDER BY m.id
   </select>
 

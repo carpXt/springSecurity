@@ -1,9 +1,12 @@
 package com.carpxt.myhr.model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Hr implements UserDetails {
     private Integer id;
@@ -25,6 +28,16 @@ public class Hr implements UserDetails {
     private String userface;
 
     private String remark;
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
+    private List<Role> roleList;
 
     public Integer getId() {
         return id;
@@ -104,7 +117,11 @@ public class Hr implements UserDetails {
     /*返回角色信息*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roleList) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 
     public String getPassword() {

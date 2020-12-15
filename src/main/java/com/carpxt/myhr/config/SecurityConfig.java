@@ -11,6 +11,7 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -58,6 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/login");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 //所有的请求都要认证之后才能访问
@@ -91,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         resp.setContentType("application/json;charset=UTF-8");
                         PrintWriter out = resp.getWriter();
                         Hr hr = (Hr) authentication.getPrincipal();
-                        //登录成功之后返回到前端 不要返回密码  还有另外一种方式是 在hr实体类上password属性上加注解 @jsonIgnore
+                        //登录成功之后返回到前端 不要返回密码  还有另外一种方式是 在hr实体类上加注解 @jsonIgnore
                         hr.setPassword(null);
                         RespResult ok = RespResult.ok("登录成功!", hr);
                         String s = new ObjectMapper().writeValueAsString(ok);
