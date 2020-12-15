@@ -24,9 +24,10 @@ public class CustomURlDecisionManager implements AccessDecisionManager {
 
     /**
      * <p></p>
+     *
      * @param: [authentication : 用户的信息，就是登录时返回的
-     *          object : 请求对象
-     *          collection : 需要的角色信息，就是步骤 1 比对返回的  ]
+     * object : 请求对象
+     * collection : 需要的角色信息，就是步骤 1 比对返回的  ]
      * @date: 2020/12/15 14:30
      * @return: void
      */
@@ -35,12 +36,12 @@ public class CustomURlDecisionManager implements AccessDecisionManager {
         for (ConfigAttribute configAttribute : collection) {
             //得到需要的角色
             String needRole = configAttribute.getAttribute();
-            if ("ROLE_LOGIN".equals(needRole)){
+            if ("ROLE_LOGIN".equals(needRole)) {
                 //说明需要登录之后才能访问
                 //判断有没有登录
-                if (authentication instanceof AnonymousAuthenticationToken){
+                if (authentication instanceof AnonymousAuthenticationToken) {
                     throw new AccessDeniedException("尚未登录，请登录！");
-                }else {
+                } else {
                     //如果登录了就直接返回
                     return;
                 }
@@ -49,7 +50,7 @@ public class CustomURlDecisionManager implements AccessDecisionManager {
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for (GrantedAuthority authority : authorities) {
                 //判断用户的角色信息是否和需要的角色信息匹配  如果满足其中一个角色就可以访问
-                if (authority.getAuthority().equals(needRole)){
+                if (authority.getAuthority().equals(needRole)) {
                     return;
                 }
             }

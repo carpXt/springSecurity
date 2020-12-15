@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @Author: tianjie
  * @Date: 2020/12/15 10:32
- * @Description:  权限设计：1、 该类主要是根据用户传来的请求地址，分析出请求需要的角色，比对用户是否具有此角色，
+ * @Description: 权限设计：1、 该类主要是根据用户传来的请求地址，分析出请求需要的角色，比对用户是否具有此角色，
  * @Version: 1.0
  */
 
@@ -29,6 +29,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 
     //比对工具
     AntPathMatcher antPathMatcher = new AntPathMatcher();
+
     //返回当前访问需要的角色（Collection<ConfigAttribute>）
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
@@ -39,13 +40,13 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         for (Menu menu : menus) {
             //第一个参数是规则，第二个参数是需要比对的属性
             //antPathMatcher.match(pattern,path)
-            if (antPathMatcher.match(menu.getUrl(),requestUrl)){
+            if (antPathMatcher.match(menu.getUrl(), requestUrl)) {
                 //如果匹配上 就得到当前请求需要的角色
                 List<Role> roleList = menu.getRoleList();
                 // springSecurity需要我们返回 Collection<ConfigAttribute> 需要转换一下
                 String[] str = new String[roleList.size()];
                 for (int i = 0; i < roleList.size(); i++) {
-                     str[i] = roleList.get(i).getName();
+                    str[i] = roleList.get(i).getName();
                 }
                 return SecurityConfig.createList(str);
             }
