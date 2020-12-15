@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -38,6 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     HrService hrService;
 
+    //权限设计 引入
+    @Autowired
+    CustomFilterInvocationSecurityMetadataSource metadataSource;
+
+    @Autowired
+    CustomURlDecisionManager decisionManager;
+
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -52,7 +61,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 //所有的请求都要认证之后才能访问
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
+                //权限设计
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(decisionManager);
+                        o.setSecurityMetadataSource(metadataSource);
+                        return o;
+                    }
+                })
                 .and()
                 //表单登录
                 .formLogin()
@@ -73,9 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         resp.setContentType("application/json;charset=UTF-8");
                         PrintWriter out = resp.getWriter();
                         Hr hr = (Hr) authentication.getPrincipal();
-                        //登录成功之后返回到前端 不要返回密码  还有另外一种方式是 在hr实体类上加注解 @jsonIgnore
+                        //登录成功之后返回到前端 不要返回密码  还有另外一种方式是 在hr实体类上password属性上加注解 @jsonIgnore
                         hr.setPassword(null);
-                        RespResult ok = RespResult.ok("登录成功", hr);
+                        RespResult ok = RespResult.ok("登录成功!", hr);
                         String s = new ObjectMapper().writeValueAsString(ok);
                         out.write(s);
                         out.flush();
@@ -117,7 +135,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     public void onLogoutSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException, ServletException {
                         resp.setContentType("application/json;charset=utf-8");
                         PrintWriter out = resp.getWriter();
-                        out.write(new ObjectMapper().writeValueAsString( RespResult.error("注销成功！")));
+                        out.write(new ObjectMapper().writeValueAsString( RespResult.ok("注销成功！")));
                         out.flush();
                         out.close();
                     }

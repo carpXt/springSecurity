@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RespResult {
+public class RespResult<T> {
 
     private Integer status;
     private String msg;
