@@ -26,16 +26,17 @@ public class HrService implements UserDetailsService {
 
     /**
      * <p>通过用户名查找用户</p>
+     *
      * @param: [username]
      * @date: 2020/12/12 14:50
      * @return: org.springframework.security.core.userdetails.UserDetails
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      Hr hr = hrMapper.loadUserByUsername(username);
-      if (hr==null){
-          throw new UsernameNotFoundException("用户名不存在");
-      }
+        Hr hr = hrMapper.loadUserByUsername(username);
+        if (hr == null) {
+            throw new UsernameNotFoundException("用户名不存在");
+        }
         return hr;
     }
 }

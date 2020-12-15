@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CustomURlDecisionManager decisionManager;
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 //登录成功的跳转页面
                 .successHandler(new AuthenticationSuccessHandler() {
-                   // authentication  保存登录成功的用户信息
+                    // authentication  保存登录成功的用户信息
                     @Override
                     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp,
                                                         Authentication authentication) throws IOException, ServletException {
@@ -109,15 +109,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         RespResult respResult = RespResult.error("登录失败");
                         //登录失败有很多中原因  需要判断
                         //快捷键  ctrl+H -> ctrl+H 就知道所有的Exception
-                        if (exception instanceof LockedException){
+                        if (exception instanceof LockedException) {
                             respResult.setMsg("账户被锁定，清联系管理员");
-                        } else if (exception instanceof CredentialsExpiredException){
+                        } else if (exception instanceof CredentialsExpiredException) {
                             respResult.setMsg("密码过期，清联系管理员");
-                        }else if (exception instanceof AccountExpiredException){
+                        } else if (exception instanceof AccountExpiredException) {
                             respResult.setMsg("账户过期，清联系管理员");
-                        }else if (exception instanceof DisabledException){
+                        } else if (exception instanceof DisabledException) {
                             respResult.setMsg("账户被禁用，清联系管理员");
-                        }else if (exception instanceof BadCredentialsException) {
+                        } else if (exception instanceof BadCredentialsException) {
                             respResult.setMsg("用户名或密码输入错误,请重新输入");
                         }
                         String s = new ObjectMapper().writeValueAsString(respResult);
@@ -135,7 +135,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     public void onLogoutSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException, ServletException {
                         resp.setContentType("application/json;charset=utf-8");
                         PrintWriter out = resp.getWriter();
-                        out.write(new ObjectMapper().writeValueAsString( RespResult.ok("注销成功！")));
+                        out.write(new ObjectMapper().writeValueAsString(RespResult.ok("注销成功！")));
                         out.flush();
                         out.close();
                     }
