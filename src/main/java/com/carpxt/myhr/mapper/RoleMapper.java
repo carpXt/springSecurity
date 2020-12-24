@@ -1,6 +1,10 @@
 package com.carpxt.myhr.mapper;
 
+import com.carpxt.myhr.model.Position;
 import com.carpxt.myhr.model.Role;
+import com.carpxt.myhr.model.dto.MenuTreeDto;
+
+import java.util.List;
 
 public interface RoleMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +18,9 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+
+    List<Role> getPermissList();
+
+
+    List<MenuTreeDto> getAllMenus();
 }

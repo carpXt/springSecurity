@@ -1,4 +1,4 @@
-package com.carpxt.myhr.controller;
+package com.carpxt.myhr.controller.config;
 
 import com.carpxt.myhr.model.Menu;
 import com.carpxt.myhr.model.RespResult;

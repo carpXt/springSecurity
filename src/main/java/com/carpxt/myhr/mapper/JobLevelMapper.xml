@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.carpxt.myhr.mapper.PositionMapper">
-    <resultMap id="BaseResultMap" type="com.carpxt.myhr.model.Position">
+<mapper namespace="com.carpxt.myhr.mapper.JobLevelMapper">
+    <resultMap id="BaseResultMap" type="com.carpxt.myhr.model.JobLevel">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="titleLevel" property="titleLevel" jdbcType="CHAR"/>
         <result column="createDate" property="createDate" jdbcType="TIMESTAMP"/>
         <result column="enabled" property="enabled" jdbcType="BIT"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, createDate, enabled
+    id, name, titleLevel, createDate, enabled
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from position
+        from joblevel
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="getPositionList" resultType="com.carpxt.myhr.model.Position">
-        select * from position
+    <select id="getJobLevelList" resultMap="BaseResultMap">
+    select  * from joblevel;
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from position
+    delete from joblevel
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-    <delete id="deletePosByIds" parameterType="com.carpxt.myhr.model.from.DeletePosFrom">
-        delete from position where id in
+    <delete id="deleteJobLevelByIds">
+     delete from joblevel
+        where id in
         <foreach collection="ids" separator="," item="id" open="(" close=")">
             #{id}
         </foreach>
     </delete>
 
-    <insert id="insert" parameterType="com.carpxt.myhr.model.Position">
-    insert into position (id, name, createDate, 
-      enabled)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
-      #{enabled,jdbcType=BIT})
+    <insert id="insert" parameterType="com.carpxt.myhr.model.JobLevel">
+    insert into joblevel (id, name, titleLevel, 
+      createDate, enabled)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{titleLevel,jdbcType=CHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{enabled,jdbcType=BIT})
   </insert>
-    <insert id="insertSelective" parameterType="com.carpxt.myhr.model.Position">
-        insert into position
+    <insert id="insertSelective" parameterType="com.carpxt.myhr.model.JobLevel">
+        insert into joblevel
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
             </if>
             <if test="name != null">
                 name,
+            </if>
+            <if test="titleLevel != null">
+                titleLevel,
             </if>
             <if test="createDate != null">
                 createDate,
@@ -62,6 +67,9 @@
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
+            <if test="titleLevel != null">
+                #{titleLevel,jdbcType=CHAR},
+            </if>
             <if test="createDate != null">
                 #{createDate,jdbcType=TIMESTAMP},
             </if>
@@ -70,11 +78,27 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.carpxt.myhr.model.Position">
-        update position
+
+
+        <insert id="save" parameterType="java.util.List" >
+            INSERT INTO joblevel(name,titleLevel,createDate,enabled) VALUES
+            <foreach collection="list" item="item" index="index"
+                     separator=",">
+                (
+                #{item.name},#{item.titleLevel},#{item.createDate},#{item.enabled}
+                )
+            </foreach>
+        </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.carpxt.myhr.model.JobLevel">
+        update joblevel
         <set>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="titleLevel != null">
+                titleLevel = #{titleLevel,jdbcType=CHAR},
             </if>
             <if test="createDate != null">
                 createDate = #{createDate,jdbcType=TIMESTAMP},
@@ -85,9 +109,10 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.carpxt.myhr.model.Position">
-    update position
+    <update id="updateByPrimaryKey" parameterType="com.carpxt.myhr.model.JobLevel">
+    update joblevel
     set name = #{name,jdbcType=VARCHAR},
+      titleLevel = #{titleLevel,jdbcType=CHAR},
       createDate = #{createDate,jdbcType=TIMESTAMP},
       enabled = #{enabled,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}

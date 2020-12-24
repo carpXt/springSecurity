@@ -1,6 +1,7 @@
 package com.carpxt.myhr.mapper;
 
 import com.carpxt.myhr.model.AdjustSalary;
+import org.apache.ibatis.annotations.Param;
 
 public interface AdjustSalaryMapper {
     int deleteByPrimaryKey(Integer id);
